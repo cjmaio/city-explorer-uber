@@ -17,8 +17,10 @@ app.config.update({
     'UPLOAD_FOLDER': '/tmp/'
 })
 
+# Initialize our app with Heroku
 heroku = Heroku(app)
 
+# Whe are we located?
 here = path.abspath(path.dirname(__file__))
 
 # Initialize our database connection
@@ -48,6 +50,7 @@ def append_query_trips(trips, is_rectangle, vertices):
             func.ST_MakeBox2D(func.ST_Point(vertices[0], vertices[1]), func.ST_POINT(vertices[2], vertices[3])),
             Trip.pickup));
     else:
+        # We are building the LINESTRING() query object dynamically because we do not know how many vertices there are
         polygon = 'LINESTRING('
         for x in range(len(vertices)):
             if x % 2 == 0:
@@ -97,21 +100,22 @@ def import_file():
     file = request.files['file']
     if file:
         file.save(path.join(app.config['UPLOAD_FOLDER'], file.filename))
-        # Do something
+        # Open the CSV file uploaded, and add in new Trips to the database
         with open(path.join(app.config['UPLOAD_FOLDER'], file.filename)) as csvfile:
             tripreader = csv.reader(csvfile, delimiter=',', quotechar='"')
             header = next(tripreader)
             for row in tripreader:
                 if row[0] != 'Date/Time':
                     print('importing...')
+                    # We grab the next trip to act as the "dropoff" point
                     next_trip = next(tripreader)
                     trip = Trip(row[0], row[1], row[2], next_trip[1], next_trip[2], row[3])
                     db.session.add(trip)
                     db.session.commit()
 
-        return 'derp'
+        return 'Import Successful'
     else:
-        return 'bad'
+        return 'There was an error.'
 
 
 @app.route('/trips', methods=['POST'])
@@ -125,7 +129,8 @@ def get_trips():
 
     pickup_points = []
     dropoff_points = []
-
+    
+    # We are grabbing the pickup and dropoff points in two separate queries, and adding them together at the end
     if show_pickups == 'true':
         trips = db.session.query(Trip).with_entities(func.count(Trip.pickup), func.ST_AsText(Trip.pickup));
         trips = append_query_trips(trips, (len(vertices) == 4), vertices);
@@ -135,7 +140,8 @@ def get_trips():
         trips = db.session.query(Trip).with_entities(func.count(Trip.dropoff), func.ST_AsText(Trip.dropoff));
         trips = append_query_trips(trips, (len(vertices) == 4), vertices);
         dropoff_points = trips.filter(Trip.date.between(start_date, end_date)).group_by(Trip.dropoff).all();
-
+    
+    # We are iterating through these here to assign a type to each.
     result = []
     for i in pickup_points:
         result.append({
