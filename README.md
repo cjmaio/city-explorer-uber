@@ -24,7 +24,31 @@ Flask, Node, React.js, Redux/Flux, WebGL, d3.js
 
 
 # How to Run
-Details coming soon... for now...
+
+## Local
+This assumes you already have Python 3 and NodeJS installed, and `virtualenv` package available.
+
+To run locally, you'll want to copy the contents of `webpack.config.development.js` to `webpack.config.js`. Then, run `npm install`.
+
+To install Python requirements, first create a virtualenv using `virtualenv venv` then do `source venv/bin/activate` and `pip install -r requirements.txt` to install all necessary requirements.
+
+To develop, you'll run in one terminal window `npm run start` to run the constant recompiling of the React JSX code. In another window, run `python app.py` to start the Python code, and access it at http://127.0.0.1:5000
+
+Setup a PostgreSQL database (assumed localhost, no username or password needed) with a table called `city-explorer` (recommendations for mac postgres). You'll need to create that database in PostgreSQL and once connected, create the extension for PostGIS like below:
+```
+CREATE EXTENSION postgis;
+```
+
+Then, you can go to the application import data, do whatever, etc.
+
+## Deploy to Heroku
+Currently, before committing code, you need to copy the contents of `webpack.config.production.js` to `webpack.config.js`, and run `npm install`
+
+Next, run `npm run build` to build all appropriate files.
+
+You can then push the code up to Heroku using whatever method suits you best. You'll need to connect to the Heroku database to do:
+
+Setup a PostgreSQL database (assumed localhost, no username or password needed) with a table called `city-explorer` (recommendations for mac postgres). You'll need to create that database in PostgreSQL and once connected, create the extension for PostGIS like below:
 ```
 CREATE EXTENSION postgis;
 ```
@@ -44,4 +68,4 @@ If I had more time, I would have:
 - Mapped out routes in a way that, if you hover over a pcikup location, it would draw routes to the various dropoff locations that came from that pickup.
 - Further researched the capabilities of PostGIS. While it was able to speed up my queries significantly, I think the library contains even more features that would assist in an application of this type.
 - Utilized Flux/Redux more; as this is my first foray into React, I was able to accomplish the application without the use of Flux/Redux. However, I can see the value in having dedicated application state management.
-
+- Utilized beanstalkd or RabbitMQ to do the data import, so the front end could have some sort of notice that data is importing, and so the page didn't need to stay up.
