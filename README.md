@@ -103,6 +103,9 @@ The database initially stored the data as separate DOUBLE fields, however, I fou
 # Future Wishlist / Exploration
 This project was a good way to initially learn Flask and React. If I had more time, there are several things I would have liked to accomplish.
 
+## Further Modularization
+Since this was my first React / Flask project, every time I look at the code I see more that could be modularized, split up into different files, etc. Since the project is small, and it would never end if I kept looking, I've stopped where I did. I would start at splitting up the `<GoogleMap />` component, since it contains the `<DateTimeFilter />` component, when really that should be separated out into two.
+
 ## Use of d3.js library
 Although Google Maps worked, it does have limitations in how much data can be displayed, and the overhead may be more than is necessary for an application like this.
 
