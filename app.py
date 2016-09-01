@@ -89,9 +89,7 @@ def index():
 
 @app.route("/assets/<path:filename>")
 def send_asset(filename):
-    print(path.join(here, "assets"))
-    print(filename)
-    return send_from_directory(path.join(here, "static"), filename)
+    return send_from_directory(path.join(here, "build"), filename)
 
 
 @app.route('/importfile', methods=['POST'])
