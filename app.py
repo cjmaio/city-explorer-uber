@@ -3,14 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_webpack import Webpack
 from geoalchemy2 import Geometry
 from sqlalchemy import func, distinct
-from os import path
+from os import path, getenv
 import csv
 from flask.ext.heroku import Heroku
 
 # Initialize the application
 app = Flask(__name__)
 app.config.update({
-    'SQLALCHEMY_DATABASE_URI': 'postgresql://localhost/city-explorer',
+    'SQLALCHEMY_DATABASE_URI': getenv('PG_DATABASE_URI', 'postgresql://localhost/city-explorer'),
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     'DEBUG': True,
     'WEBPACK_MANIFEST_PATH': './static/manifest.json',
