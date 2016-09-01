@@ -91,7 +91,8 @@ For the database end, I decided to use PostgreSQL, as it has very good support f
 Since I was previously familiar with using the Google Maps API, I utilized it to display the data points on the map. It comes with built-in support for heatmaps and other features. There is a tradeoff - it does not handle hundreds of thousands of markers with ease, and is a dependency on an external service. This is a tradeoff I was comfortable with given the timeline for this assignment.
 
 ## Importing Data
-I wrote a quick upload page in the application to import the CSV data into the database,as it was helpful in learning the React/Flask frameworks/libraries.
+I wrote a quick upload page in the application to import the CSV data into the database,as it was helpful in learning the React/Flask frameworks/libraries. However, a limitation of Heroku is that they automatically timeout the page after 30 seconds if you don't send data back, so the import does *not* work on Heroku. I left it in for the sake of ... well ... completeness?
+
 
 ## UI
 The UI is very simple - two pages, Map and Export. A simple CSS library called [Vital](https://vitalcss.com/) was used to provide basic styling to the application. 
