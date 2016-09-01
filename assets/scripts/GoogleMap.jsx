@@ -37,12 +37,14 @@ export default React.createClass({
             }
         }
     },
+    // If any filter values change, update the state here
     handleFilterChange(name, value) {
-        var change = this.state.filter;
+        let change = this.state.filter;
         change[name] = value;
         this.setState({ 'filter': change });
         console.log('handling change ' + name + ' ' + value);
     },
+    // Clear all markers, made easy with MarkerClusterer
     clearMarkers() {
         let mc = this.state.mc;
         if (mc !== null) {
@@ -52,6 +54,7 @@ export default React.createClass({
             'markers': []
         });
     },
+    // Clear the Heatmap
     clearHeatmap() {
         if (this.state.heatmap !== null) {
             this.state.heatmap.setMap(null);
@@ -60,6 +63,7 @@ export default React.createClass({
             });
         }
     },
+    // Clera any drawings, and reload the map data
     clearDrawing() {
         this.state.overlay.setMap(null);
         this.setState({ 'overlay': null, 'type': '' });
@@ -69,9 +73,11 @@ export default React.createClass({
     updateData() {
         this.changeMap();
     },
+    // Pull new map data from the server
     changeMap() {
         let map = this.state.map;
-
+        
+        // Bail if we are already reloading the map
         if (this.state.reloadingMap == true) return;
         this.setState({reloadingMap: true});
 
@@ -98,7 +104,8 @@ export default React.createClass({
             vertices.push([ map.getBounds().getNorthEast().lat(), map.getBounds().getNorthEast().lng() ]);
             vertices.push([ map.getBounds().getSouthWest().lat(), map.getBounds().getSouthWest().lng() ]);
         }
-
+        
+        // Send our request to the backend
         let xhr = new XMLHttpRequest();
         xhr.open('post', '/trips' , true);
         xhr.overrideMimeType('application/json');
@@ -111,7 +118,7 @@ export default React.createClass({
                     let markers = [];
                     let points = [];
 
-                    // TODO: this is temporary
+                    // TODO: I'm not happy with this, and in the future, would offload this task to the DB
                     let largestPickups = 0;
                     let largestDropoffs = 0;
                     let totalPickups = 0;
@@ -129,9 +136,10 @@ export default React.createClass({
                             }
                         }
                     }
-
+                    
                     this.setState({ totalPickups: totalPickups, totalDropoffs: totalDropoffs, largestPickups: largestPickups, largestDropoffs: largestDropoffs });
-
+                    
+                    // Let's limit ourselves, when we display that many markers the browser is NOT happy.
                     if (totalDropoffs+totalPickups > 150000 && this.state.filter.showMarkers) {
                         alert('Whoa there! Your filter criterion has only narrowed the result set down to ' + (totalDropoffs + totalPickups) + ' data points, when we can only comfortably display 150,000 at once. Narrow down your selection, or disable markers and enable the heatmap to analyze datasets this large.');
                         this.setState({ reloadingMap: false });
@@ -140,11 +148,12 @@ export default React.createClass({
 
                     this.clearMarkers();
                     this.clearHeatmap();
-
+                    
+                    // Generate and place all markers
                     for (var value of data.results) {
-                        var pickup = value.point.replace('POINT(','').replace(')','').split(' ');
-                        var color = (value.type == 'pickup') ? '#0066cc' : '#00cc66';
-                        var size = 1;
+                        let pickup = value.point.replace('POINT(','').replace(')','').split(' ');
+                        let color = (value.type == 'pickup') ? '#0066cc' : '#00cc66';
+                        let size = 1;
                         if (this.state.filter.showFrequency == true) {
                             if (value.type == 'pickup') {
                                 size = (5 * (value.count / largestPickups));
@@ -152,9 +161,9 @@ export default React.createClass({
                                 size = (5 * (value.count / largestDropoffs));
                             }
                         }
-                        var latlng = new google.maps.LatLng(parseFloat(pickup[0]), parseFloat(pickup[1]));
+                        let latlng = new google.maps.LatLng(parseFloat(pickup[0]), parseFloat(pickup[1]));
                         if (this.state.filter.showMarkers) {
-                            var marker = new google.maps.Marker({
+                            let marker = new google.maps.Marker({
                                 position: latlng,
                                 icon: {
                                     path: 'M0.5,5a4.5,4.5 0 1,0 9,0a4.5,4.5 0 1,0 -9,0',
@@ -172,7 +181,7 @@ export default React.createClass({
 
                     let mc = this.state.mc;
                     if (mc === null) {
-                        var mc = new MarkerClusterer(map, markers, {
+                        mc = new MarkerClusterer(map, markers, {
                             imagePath: 'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m',
                             maxZoom: 16
                         });
@@ -196,7 +205,8 @@ export default React.createClass({
 
             }
         }.bind(this);
-        var data = new FormData();
+        
+        let data = new FormData();
         data.append('date_start', this.state.filter.fromDate);
         data.append('date_end', this.state.filter.toDate);
         data.append('show_pickups', this.state.filter.showPickups);
