@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>City Explorer</title>
+    <!-- For simplicity sake, we are going to import Vital CSS from their CDN. In a production app, it would be compiled -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/doximity/vital/v1.2.0/dist/css/vital.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    {{  stylesheet_tag('app_css') | safe }}
+</head>
+<body>
+<div id="app"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDe4ZeLqesB9nXEiLz8aMlwHBuYAhhwdTE&sensor=true&libraries=drawing,visualization"></script>
+<script src="https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js"></script>
+{{ javascript_tag('app_js') | safe }}
+</body>
+</html>

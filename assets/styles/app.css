@@ -1,0 +1,8 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+#google-map {
+        width: 100%;
+        height: calc(100vh - 200px);
+}
