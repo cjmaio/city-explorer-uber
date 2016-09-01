@@ -31,7 +31,7 @@ CREATE EXTENSION postgis;
 
 
 # Approach
-I am very familiar with PHP and AngularJS, as I use it every day currently. However, as the ATC utilizes Python (Flask) and React, I decided to write it in those languages. I was previously familiar with Python, and know JavaScript very well, but I've never used the Flask or React frameworks previous to this project. I decided to use PostgreSQL as the database backend, as it has very good support for geometric functions and queries with the PostGIS library.
+I am very familiar with PHP and AngularJS, as I use it every day currently. However, as the ATC utilizes Python (Flask) and React, I decided to write it in those languages. I was previously familiar with Python, and know JavaScript very well, but I've never used the Flask or React frameworks previous to this project. I decided to use PostgreSQL as the database backend, as it has very good support for geometric functions and queries with the [PostGIS library](http://postgis.net/install/).
 
 # Design Decisions
 Since I was previously familiar with using the Google Maps API, I utilized it to display the data points on the map. It comes with built-in support for heatmaps and other features. There is a tradeoff - it does not handle hundreds of thousands of markers with ease. However, with the limited timeline of this project, it was a tradeoff I was willing to go with. The application interface is very simple, but I did write a quick upload to import the data into the database, as it was helpful in learning the React/Flask frameworks/libraries. A simple CSS library (Vital) was used to provide basic styling to the application. 

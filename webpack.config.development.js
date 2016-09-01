@@ -6,7 +6,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestRevisionPlugin = require('manifest-revision-webpack-plugin');
 
 // Development asset host, asset location and build output path.
-var publicHost = '';
+var publicHost = 'http://127.0.0.1:2992';
 var rootAssetPath = './assets';
 var buildOutputPath = './build';
 

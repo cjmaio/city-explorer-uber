@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_webpack import Webpack
 from geoalchemy2 import Geometry
@@ -18,6 +18,8 @@ app.config.update({
 })
 
 heroku = Heroku(app)
+
+here = path.abspath(path.dirname(__file__))
 
 # Initialize our database connection
 db = SQLAlchemy(app)
@@ -83,6 +85,13 @@ class Trip(db.Model):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route("/assets/<path:filename>")
+def send_asset(filename):
+    print(path.join(here, "assets"))
+    print(filename)
+    return send_from_directory(path.join(here, "static"), filename)
 
 
 @app.route('/importfile', methods=['POST'])
